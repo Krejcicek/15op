@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Testing MyApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        form {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"], input[type="submit"] {
+            /* width: 100%; */
+            width: 95%;
+            margin-bottom: 10px;
+
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+    body {
+        padding: 0;
+        margin: 0;
+
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f9f9f9;
+    }
+
+    form {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+
+
+        box-sizing: border-box;
+    }
+
+    input[type="text"], input[type="submit"] {
+        width: 100%;
+        font-size: 16px;
+        padding: 15px;
+    }
+
+
+        }
+    </style>
+</head>
+<body>
+    <h1 align="center">Welcome</h1>
+<form id="myForm">
+
+    First Name: <input type="text" name="firstname" required><br>
+    City: <input type="text" name="city" required><br>
+    <input type="submit" value="Submit">
+    </form>
+    <p id="result"></p> 
+    <script>
+        const form = document.getElementById('myForm');
+        const resultParagraph = document.getElementById('result');
+
+    //  <p id="result"></p> <script>
+  //      const form = document.getElementById('myForm');
+   //     const resultParagraph = document.getElementById('result');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const firstName = form.firstname.value.trim();
+            const city = form.city.value.trim();
+        
+            function isValidInput(str) {
+                const invalidChars = /[\d\uD800-\uDFFF]/; // našel jsem postup na https://mathiasbynens.be/notes/javascript-unicode
+                return !invalidChars.test(str);
+            }
+
+            // Pokud je nějaký vstup neplatný, zobrazí se chybová hláška
+            if (!isValidInput(firstName) || !isValidInput(city)) {
+                resultParagraph.textContent = "Please enter valid letters only, without numbers or emojis.";
+                return;
+            }
+
+            // Funkce pro spočítání samohlásek a souhlásek
+            function countVowelsAndConsonants(str) {
+                const vowels = 'aeiouAEIOU';
+                let vowelCount = 0;
+                let consonantCount = 0;
+
+
+             //   for (let i = 0; i < str.length; i++) {
+        //            if (vowels.includes(str[i])) {
+          //              vowelCount++;
+          //          } else {
+          //              consonantCount++;
+          //          }
+         //       }
+
+
+                for (let i = 0; i < str.length; i++) {
+                    if (vowels.includes(str[i])) {
+                        vowelCount++;
+                    } else if (/[a-zA-Z]/.test(str[i])) { 
+                        consonantCount++;
+                    }
+                }
+
+                return { vowelCount, consonantCount };
+            }
+
+            // Spočítáme samohlásky a souhlásky pro jméno a město
+            const firstNameCounts = countVowelsAndConsonants(firstName);
+            const cityCounts = countVowelsAndConsonants(city);
+
+            // Sestavíme výslednou větu
+            const result = `Welcome (${firstName}) from (${city}). There are ${firstNameCounts.vowelCount} vowels in your first name and ${firstNameCounts.consonantCount} consonants in your first name and there are ${cityCounts.vowelCount} vowels in your city and ${cityCounts.consonantCount} consonants in your city.`;
+
+            resultParagraph.textContent = result;
+        });
+    </script>
+   
+</body>
+</html>
